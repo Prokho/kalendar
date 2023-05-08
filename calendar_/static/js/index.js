@@ -43,7 +43,7 @@ function Controler(base_selector)// функция создает обьект �
     this.clickSpecialist = function(event)
     {
         let target = event.target;
-        let specialist_id = target.getAttribute("data-id");
+        let specialist_id = target.closest('li').getAttribute("data-id");
         this.specialistId = specialist_id;
         this.showCalendarSpecialist(specialist_id);
         return false;
