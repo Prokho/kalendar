@@ -14,7 +14,8 @@ class Time_slot(models.Model):
     time = models.TimeField() # время возможной записи для потенциальных клиентов
     create_date = models.DateTimeField(auto_now_add=True, blank=True) # дата и время когда психолог сделал слот доступным
     free_time = models.BooleanField(blank=True, default=True)
-
+    online = models.BooleanField(blank=True, default=True)
+    
     def __str__(self):
         return f"{self.date} {self.time} {'время свободно для записи' if self.free_time else 'время занято'} {str(self.user)}"
 
@@ -34,6 +35,7 @@ class Appointment(models.Model):
     client_phone_number = models.CharField(max_length=20)
     client_name = models.CharField(max_length=50)
     token = models.CharField(max_length= 200, default=secrets.token_urlsafe())
+    
 
     def __str__(self):
         return f"{self.time_slot.user.get_full_name()} {self.time_slot.date} {self.time_slot.time} {self.client_name} {self.client_phone_number}"
@@ -60,6 +62,8 @@ class User_profile(models.Model):
 class Phone_validation(models.Model):
     phone_number = models.CharField(max_length=20)
     validation_code = models.IntegerField()
+
+
 
 
 

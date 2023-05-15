@@ -47,7 +47,7 @@ def getListDate(request):  # в соответствии с апи клиент�
         return Response({"error": "such specialist_id is not exist"})
     
     # с помощью validated_data отбираются нужные данные (то есть это похоже на фильтр). Изначально в предыдущих строках мы получили гораздо больше данных которые нужно отобрать.
-    list_time_slot = Time_slot.objects.filter(date__gte=data_range.begin, date__lte=data_range.end, user__id=data_range.specialist_id, free_time = True) # в скобках написать конструкцию которая принадлежит указанному диапазону, переданному пользователю, который храниться в data_range
+    list_time_slot = Time_slot.objects.filter(date__gte=data_range.begin, date__lte=data_range.end, user__id=data_range.specialist_id, free_time = True, online = data_range.online) # в скобках написать конструкцию которая принадлежит указанному диапазону, переданному пользователю, который храниться в data_range
     print(list_time_slot, "!!!") # получаем данные дат в указанном диапазоне в виде <QuerySet [<Time_slot: Time_slot object (1)>
     list_date = list(map(lambda item: item.date, list_time_slot))
     return Response(list_date)
@@ -67,7 +67,7 @@ def getTimeSlot(request):
     if not serializer.is_valid(): # валидизируем данные полученные от пользователя
         return Response(serializer.errors) #сообщение об ошибке
     data_range = serializer.create(serializer.validated_data)
-    list_time_slot = Time_slot.objects.filter(date=data_range.date, user__id=data_range.specialist_id, free_time=True)
+    list_time_slot = Time_slot.objects.filter(date=data_range.date, user__id=data_range.specialist_id, free_time=True, online = data_range.online)
     list_serializable_getTimeSlot = list(map(lambda item: TimeSlotSerializer(item).data, list_time_slot))
     return Response(list_serializable_getTimeSlot)
 

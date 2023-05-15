@@ -142,6 +142,7 @@ class DataRangeSerializer(serializers.Serializer):
     begin = serializers.DateField() #объект согласно API
     end = serializers.DateField() #объект согласно API
     specialist_id = serializers.IntegerField()
+    online = serializers.BooleanField()
 
     def create(self, validated_data): #функция преобразует данные из словаря в объект
         return DataRange(**validated_data) #validated_data - находится под капотом и это словарь, котрый прошел валидацию джанго, ** - операция паревращения словаря в список аргументов и значений
@@ -150,6 +151,7 @@ class DataRangeSerializer(serializers.Serializer):
 class RequestTimeSlotBySpecialistIdSerializer(serializers.Serializer):
     date = serializers.DateField()
     specialist_id = serializers.IntegerField()
+    online = serializers.BooleanField()
 
     def create(self, validated_data):
         return RequestTimeSlotBySpecialistID(**validated_data)

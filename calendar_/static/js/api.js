@@ -9,8 +9,8 @@ function API()
 
     this.getCalendarSpecialist = function(specialist_id, successHandler, failHandler)
     {
-        let today = new Date().toLocaleDateString('en-CA');
-        let dayAfterThreeMonth = new Date(new Date().setDate(new Date().getDate() + 90)).toLocaleDateString("en-CA");
+        let today = formatDate(new Date());
+        let dayAfterThreeMonth = formatDate(new Date(new Date().setDate(new Date().getDate() + 90)));
         let body = {"begin": today, "end": dayAfterThreeMonth, "specialist_id": specialist_id};
         let bodyJSON = JSON.stringify(body);
         let response = fetch('/get_freedate_list/', {

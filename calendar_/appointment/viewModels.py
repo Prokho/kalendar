@@ -5,15 +5,17 @@ class Specialist:
         self.photo = photo
 
 class DataRange: # объявили сериализатор в соответствии API Client для выполнения пункта 2)	получить список дат где свободные тайм слоты
-    def __init__(self, begin, end, specialist_id):
+    def __init__(self, begin, end, specialist_id, online):
         self.begin = begin
         self.end = end
         self.specialist_id = specialist_id
+        self.online = online
 
 class RequestTimeSlotBySpecialistID:
-    def __init__(self, date, specialist_id):
+    def __init__(self, date, specialist_id, online):
         self.date = date
         self.specialist_id = specialist_id
+        self.online = online
 
 class PhoneVaidateRequest:
     def __init__(self, phone):
