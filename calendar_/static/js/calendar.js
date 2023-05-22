@@ -30,8 +30,21 @@ function Calendar(selector, listDate){
     this.createCalendar = function()
     {
         this.container = document.querySelector(this.selector);
+
+        var oldCalendar = document.querySelector(".calendar-container");
+        if(oldCalendar)
+        {
+            var element = oldCalendar
+            while(element)
+            {
+                var nextNode = element.nextSibling;
+                element.remove();
+                element = nextNode;
+            }
+        }
+
         var row = document.createElement("div");
-        row.classList.add("row");
+        row.classList.add("row", "calendar-container", "mt-5");
         var calendar_col = document.createElement("div");
         calendar_col.classList.add("col-10");
         calendar_col.classList.add("col-md-6");

@@ -45,16 +45,31 @@ function Controler(base_selector)// функция создает обьект �
         let target = event.target;
         let specialist_id = target.closest('li').getAttribute("data-id");
         this.specialistId = specialist_id;
-        this.showCalendarSpecialist(specialist_id);
+        window.history.pushState(null, null, "#calendar");
+        this.showTypeAppointment();
         return false;
     }
 
-    this.showCalendarSpecialist = function(specialist_id)
+    this.showTypeAppointment = function()
+    {
+        var typeAppointment = new TypeAppointment(this.base_selector);
+        typeAppointment.onclickButton = this.clickTypeAppointment.bind(this);
+        typeAppointment.showButtons();
+    }
+
+    this.clickTypeAppointment = function(event)
+    {
+        let target = event.target;
+        this.online = JSON.parse(target.value);
+        this.showCalendarSpecialist();
+        return false;
+    }
+
+    this.showCalendarSpecialist = function()
     {
         var showCalendar = this.showCalendar.bind(this);
         var showError = this.showError.bind(this);
-        window.history.pushState(null, null, "#calendar");
-        this.api.getCalendarSpecialist(specialist_id, showCalendar, showError);
+        this.api.getCalendarSpecialist(this.specialistId, this.online, showCalendar, showError);
     }
 
     this.showCalendar = function(listDate){
@@ -68,7 +83,7 @@ function Controler(base_selector)// функция создает обьект �
         var date = event.target.getAttribute("data-date");
         var showTimeslot = this.showTimeslot.bind(this);
         var showError = this.showError.bind(this);
-        this.api.getTimeSlotBySpecialistIdAndDate(this.specialistId, date, showTimeslot, showError);
+        this.api.getTimeSlotBySpecialistIdAndDate(this.specialistId, this.online, date, showTimeslot, showError);
     }
 
     this.showTimeslot = function(listTimeslot){

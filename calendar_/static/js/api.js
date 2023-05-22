@@ -7,11 +7,11 @@ function API()
         response.then(r => this.processResponse(r, successHandler, failHandler));
     }
 
-    this.getCalendarSpecialist = function(specialist_id, successHandler, failHandler)
+    this.getCalendarSpecialist = function(specialist_id, online, successHandler, failHandler)
     {
         let today = formatDate(new Date());
         let dayAfterThreeMonth = formatDate(new Date(new Date().setDate(new Date().getDate() + 90)));
-        let body = {"begin": today, "end": dayAfterThreeMonth, "specialist_id": specialist_id};
+        let body = {"begin": today, "end": dayAfterThreeMonth, "specialist_id": specialist_id, "online": online};
         let bodyJSON = JSON.stringify(body);
         let response = fetch('/get_freedate_list/', {
             method: 'POST',
@@ -31,9 +31,9 @@ function API()
         }
     }
 
-    this.getTimeSlotBySpecialistIdAndDate = function(specialist_id, date, successHandler, failHandler)
+    this.getTimeSlotBySpecialistIdAndDate = function(specialist_id, date, online, successHandler, failHandler)
     {
-        let body = {"specialist_id": specialist_id, "date": date};
+        let body = {"specialist_id": specialist_id, "date": date, "online": online};
         let bodyJSON = JSON.stringify(body);
         let response = fetch('/get_time_slot/', {
             method: 'POST',
