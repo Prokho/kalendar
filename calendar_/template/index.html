@@ -19,18 +19,37 @@
             {
                 font-size: x-large;
             }
+            html, body
+            {
+                height: 100%;
+            }
+            .content
+            {
+                min-height: 100%;
+            }
         </style>
     </head>
     <body>
-        <div class="test conainer-fluid">
 
+        <div class="content conainer-fluid">
         </div>
+        <footer class="footer">
+            <div class="container">
+                <div class="row ">
+                    <div class="col-10 col-md-6 offset-1 offset-md-3 rounded"> 
+                        При возникновении проблем свяжитесь с нами по телефону
+                        <a href="tel:+79645224966">+7&nbsp;964&nbsp;522&#8209;49&#8209;66</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
         <script>
-        let controler = new Controler(".test");
-        controler.start();
-        window.onhashchange = function() {
+            var controler = new Controler(".content");
             controler.start();
-        }
+            window.onhashchange = function() {
+                controler.start();
+            }
         </script>
     </body>
 </html>

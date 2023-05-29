@@ -83,7 +83,7 @@ function Controler(base_selector)// функция создает обьект �
         var date = event.target.getAttribute("data-date");
         var showTimeslot = this.showTimeslot.bind(this);
         var showError = this.showError.bind(this);
-        this.api.getTimeSlotBySpecialistIdAndDate(this.specialistId, this.online, date, showTimeslot, showError);
+        this.api.getTimeSlotBySpecialistIdAndDate(this.specialistId, date, this.online, showTimeslot, showError);
     }
 
     this.showTimeslot = function(listTimeslot){

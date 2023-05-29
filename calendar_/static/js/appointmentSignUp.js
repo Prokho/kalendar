@@ -85,10 +85,13 @@ function AppointmentSignUp(selector, timeslotId)
         formContainer.appendChild(form);
 
         this.main_container.appendChild(formRow);
+
+        form.scrollIntoView();
     }
 
     this.showSignUpBtn = function(){
         this.divBtnSignUp.appendChild(this.btnSignUp);
+        this.divBtnSignUp.scrollIntoView(false);
     }
 
     this.phonIsCorrect=function(phone)

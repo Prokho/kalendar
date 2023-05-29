@@ -34,6 +34,8 @@ function ListTimeslot(selector, listData)
         this.timeslotsContainer.appendChild(this.timeslotsRow);
 
         this.listData.forEach(this.showItem.bind(this));
+
+        this.timeslots.scrollIntoView();
     }
 
     this.showItem = function(timeslot)

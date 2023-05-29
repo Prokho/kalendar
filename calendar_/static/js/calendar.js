@@ -163,5 +163,7 @@ function Calendar(selector, listDate){
             divDay.innerHTML = i;
             this.calendar__date.appendChild(divDay);
         }
+
+        this.calendar.scrollIntoView();
     }
 }

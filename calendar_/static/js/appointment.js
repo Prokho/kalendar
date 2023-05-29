@@ -25,6 +25,7 @@ function Appointment(selector, appointmet)
         var divTime = document.createElement("div");
         divTime.classList.add("row");
 
+
         if(this.appointmet.hasOwnProperty('error'))
         {
             var divError = document.createElement("div");
@@ -34,14 +35,22 @@ function Appointment(selector, appointmet)
         else
         {
             divSuccessText.innerHTML = "Вы записаны на прием";
+            if(!this.appointmet.oline)
+            {
+                divSuccessText.innerHTML += " г. Москва, ул. Орджоникидзе, д.11, стр. 11, 2 этаж, офис 201";
+            }
             divDate.innerHTML = "Дата приема: "+ this.appointmet.time_slot.date;
-            divTime.innerHTML = "Время приема: "+ this.appointmet.time_slot.time;
+            divTime.innerHTML = "Время приема: "+ this.appointmet.time_slot.time.split(':').slice(0, 2).join(':');
             divSpecialist.innerHTML = "Ваш специалист "+ this.appointmet.time_slot.user.name;
+        
+
                 
             divAppointmentContainer.appendChild(divSuccessText);
             divAppointmentContainer.appendChild(divDate);
             divAppointmentContainer.appendChild(divTime);
             divAppointmentContainer.appendChild(divSpecialist);
+
+
 
             divAppointment.appendChild(divAppointmentContainer);
             this.main_container.appendChild(divAppointment);
