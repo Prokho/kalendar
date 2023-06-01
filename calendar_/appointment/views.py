@@ -105,6 +105,8 @@ def getApointmentRequest(request):
         description_client = appointment_request.description, 
         client_phone_number = appointment_request.phone, client_name = appointment_request.name)
     appointment.save()
+    send_sms(appointment_request.phone, f"вы записаны на прием к психологу на {time_slot.date} в {str(time_slot.time)[0:-3]}")
+    send_sms(time_slot.user.user_profile_set.first().phone, f"к вам на прием записан клиент {appointment_request.name}, его телефон {appointment_request.phone} на {time_slot.date} в {str(time_slot.time)[0:-3]}")
     serializer_appointment = AppointmentSerializer(appointment)
     print(serializer_appointment.data)
     return Response(serializer_appointment.data)
