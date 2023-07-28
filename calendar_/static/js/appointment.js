@@ -32,13 +32,15 @@ function Appointment(selector, appointmet)
             divError.innerHTML="Возникла ошибка обновите страницу и попробуйте еще раз";
             this.main_container.appendChild(divError);
         }
-        else
+        
         {
             divSuccessText.innerHTML = "Вы записаны на прием";
             if(!this.appointmet.oline)
             {
                 divSuccessText.innerHTML += " г. Москва, ул. Орджоникидзе, д.11, стр. 11, 2 этаж, офис 201";
             }
+            else divSuccessText.innerHTML += "!!!!!";
+
             divDate.innerHTML = "Дата приема: "+ this.appointmet.time_slot.date;
             divTime.innerHTML = "Время приема: "+ this.appointmet.time_slot.time.split(':').slice(0, 2).join(':');
             divSpecialist.innerHTML = "Ваш специалист "+ this.appointmet.time_slot.user.name;

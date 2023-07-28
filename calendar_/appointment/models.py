@@ -17,7 +17,7 @@ class Time_slot(models.Model):
     online = models.BooleanField(blank=True, default=True)
     
     def __str__(self):
-        return f"{self.date} {self.time} {'время свободно для записи' if self.free_time else 'время занято'} {str(self.user)}"
+        return f"{self.id} {'online' if self.online else 'в кабинете'} {self.date} {self.time} {'время свободно для записи' if self.free_time else 'время занято'} {str(self.user)}"
 
     # для time_slot:
     # юзер не заблокирован и имеет роль специалист - для этого нужно запросить список групп и проверить что юзер принадлежит этой группе по соответствующемк ай ди.
@@ -58,6 +58,9 @@ class User_profile(models.Model):
     time_slot_duration = models.PositiveIntegerField()
     minimal_time_start = models.TimeField()
     count_session_per_day = models.PositiveIntegerField()
+    order = models.PositiveIntegerField(default=1)
+    def __str__(self) -> str:
+        return f'{self.id} {self.user}'
 
 class Phone_validation(models.Model):
     phone_number = models.CharField(max_length=20)

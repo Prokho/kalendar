@@ -25,10 +25,12 @@ from .validation_phone import *
 
 @api_view(["GET"]) # декоратор гет, который предварительно обрабатывает запрос гет и его проверяет (проверки под капотом)
 def getListSpecialist(request): # в соответствии с апи клиента получаем список специалистов через эту функцию
-    listUser = User.objects.all() #получаем список всех специалистов, User - это имя класса импортированного на листе models.py
+    #listUser = User.objects.all() #получаем список всех специалистов, User - это имя класса импортированного на листе models.py
     # objects - требует фреймворк джанго, это атрибут    
     #list_serializable_specialist = list(map(lambda item: SpecialistSerializer(item).data, listUser))  #жесть!!!!!
     #return Response(list_serializable_specialist) 
+    listUserProfile = User_profile.objects.filter(show = True).order_by('-order').all()
+    listUser = list(map(lambda x: x.user, listUserProfile))
     return Response(SpecialistSerializer(listUser, many=True).data)
 
 @api_view(["POST"]) # декоратор пост, который предварительно обрабатывает запрос пост и его проверяет (проверки под капотом)
@@ -45,29 +47,45 @@ def getListDate(request):  # в соответствии с апи клиент�
     #if Time_slot.objects.filter(user__id=data_range.specialist_id)==False:
     if not User.objects.filter(id = specialist_id).first():
         return Response({"error": "such specialist_id is not exist"})
-    
+    current_time = datetime.now()
+    current_date = current_time.date()
     # с помощью validated_data отбираются нужные данные (то есть это похоже на фильтр). Изначально в предыдущих строках мы получили гораздо больше данных которые нужно отобрать.
-    list_time_slot = Time_slot.objects.filter(date__gte=data_range.begin, date__lte=data_range.end, user__id=data_range.specialist_id, free_time = True, online = data_range.online) # в скобках написать конструкцию которая принадлежит указанному диапазону, переданному пользователю, который храниться в data_range
+    include_today = False
+    if data_range.begin > current_date:
+        list_time_slot = Time_slot.objects.filter(date__gte=data_range.begin, date__lte=data_range.end, user__id=data_range.specialist_id, free_time = True, online = data_range.online) # в скобках написать конструкцию которая принадлежит указанному диапазону, переданному пользователю, который храниться в data_range
+    else:
+        list_time_slot = Time_slot.objects.filter(date__gt=current_date, date__lte=data_range.end, user__id=data_range.specialist_id, free_time = True, online = data_range.online) 
+        min_time = current_time + timedelta(hours=6)
+        print(min_time)
+        if min_time.date() <= current_date:
+            time_slot_today = Time_slot.objects.filter(time__gte=min_time,date=current_date, user__id=data_range.specialist_id, free_time=True, online = data_range.online).first()
+            if time_slot_today:
+                include_today = True
+
+   
+
     print(list_time_slot, "!!!") # получаем данные дат в указанном диапазоне в виде <QuerySet [<Time_slot: Time_slot object (1)>
     list_date = list(map(lambda item: item.date, list_time_slot))
+    if include_today:
+        list_date.append(current_date)
     return Response(list_date)
 
-    # дз - проверить что ай ди специалиста который был передан существует
+    
 
 @api_view(["POST"])
 def getTimeSlot(request):
-    # 1) десериализовать данные по аналогии с 34 строкой
-    # 2) валидизировать данные по аналогии с 36-37 строками
-    # 3) создать обьект по аналогии со стр 38
-    # 4) поискать данные в базе данных (надо найти тайм слоты которые совпадают с датой указанной пользователем и ай ди специалиста)
-    # 5) сериализовать полученные тайм слоты (посмотреть как работают сериализаторы, аналог стр 28)
-    # 6) отправить json responce по аналогии со стр 38
-    # ДЗ со звездоч - создать следующий сериализатор и вьюМодел по документации (пункт 4)
+    
     serializer = RequestTimeSlotBySpecialistIdSerializer(data = request.data) 
     if not serializer.is_valid(): # валидизируем данные полученные от пользователя
         return Response(serializer.errors) #сообщение об ошибке
-    data_range = serializer.create(serializer.validated_data)
-    list_time_slot = Time_slot.objects.filter(date=data_range.date, user__id=data_range.specialist_id, free_time=True, online = data_range.online)
+    request_time_slot = serializer.create(serializer.validated_data)
+    current_time = datetime.now()
+    min_time = current_time + timedelta(hours=6)
+    if current_time.date()==request_time_slot.date:
+        list_time_slot = Time_slot.objects.filter(time__gte=min_time,date=request_time_slot.date, user__id=request_time_slot.specialist_id, free_time=True, online = request_time_slot.online)
+    else:
+        list_time_slot = Time_slot.objects.filter(date=request_time_slot.date, user__id=request_time_slot.specialist_id, free_time=True, online = request_time_slot.online)
+    list_time_slot=list_time_slot.order_by("time").all()
     list_serializable_getTimeSlot = list(map(lambda item: TimeSlotSerializer(item).data, list_time_slot))
     return Response(list_serializable_getTimeSlot)
 
